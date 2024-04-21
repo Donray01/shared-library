@@ -1,0 +1,31 @@
+@Library('LandmarkSS-sharedlibs')
+
+pipeline{
+	agent any
+	tools {
+	 "maven3.9.6"
+	}
+	stages{
+	 stage('gitpull') {
+       steps {
+       	sh "echo start of project"
+       	git 'https://github.com/LandmarkTechnology/web-app'
+       }
+	 }
+	}
+	 stage('Build'){
+	  steps{
+	   common("Build")
+	  }
+	 }
+	  stage('SonarQube Report Analysis'){
+	   steps{
+	    common("SonarQube Report")
+	   }
+	  }
+	   stage('UploadArtifacts into Nexus'){
+	    step{
+	     common("upload into Nexus")
+	    }
+	   }
+}
